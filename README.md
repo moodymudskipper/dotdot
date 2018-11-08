@@ -2,9 +2,11 @@
 dotdot
 ======
 
-This package contains 10 lines of code, it proposes an improved assignment using the shorthand `..`.
+This package proposes an improved assignment using the shorthand `..`.
 
 Think about the `..` as the `:` of the `:=` sign laid horizontally.
+
+Install it with `devtools::install_github("moodymudskipper/dotdot")`
 
 ``` r
 library(dotdot)
