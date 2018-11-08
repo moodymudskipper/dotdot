@@ -30,19 +30,22 @@ library(data.table)
 #> The following object is masked from 'package:dotdot':
 #> 
 #>     :=
-try(levels(z) := c(.., "level5"))
+try(levels(z) := c(.., "level5")) # fails!
+z
+#> [1] a b c
+#> Levels: a b c level4
 dotdot_first()
 #> 
 #> Attaching package: 'dotdot'
 #> The following object is masked from 'package:data.table':
 #> 
 #>     :=
-levels(z) := c(.., "level5")
+levels(z) := c(.., "level5") # works!
 z
 #> [1] a b c
 #> Levels: a b c level4 level5
 data <- as.data.table(head(iris))
-data[,new_col := 3] # it still works!
+data[,new_col := 3] # `:= ` works as if dotdot wasn't attached
 data 
 #>    Sepal.Length Sepal.Width Petal.Length Petal.Width Species new_col
 #> 1:          5.1         3.5          1.4         0.2  setosa       3

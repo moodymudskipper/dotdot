@@ -39,11 +39,12 @@ for parsing but don't actually call it.
 
 ```{r}
 library(data.table)
-try(levels(z) := c(.., "level5"))
+try(levels(z) := c(.., "level5")) # fails!
+z
 dotdot_first()
-levels(z) := c(.., "level5")
+levels(z) := c(.., "level5") # works!
 z
 data <- as.data.table(head(iris))
-data[,new_col := 3] # it still works!
+data[,new_col := 3] # `:= ` works as if dotdot wasn't attached
 data 
 ```
