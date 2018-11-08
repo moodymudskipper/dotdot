@@ -7,5 +7,6 @@
 dotdot_first()
 }
 \description{
-Make sure `:=` is unmasked
+This is not necessary to call this function after loading
+*rlang*/*tidyverse* or *data.table*
 }

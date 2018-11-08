@@ -23,26 +23,18 @@ z
 #> Levels: a b c level4
 ```
 
-In case you've attached a package containing `:=` such as *`data.table`* or *`rlang`* you can use `dotdot_first()` to make sure that our `:=` is not masked, the operator will still work fine in *`data.table`* and *`rlang`* as they only use it for parsing but don't actually call it.
+The operator `:=` is used by prominent packages *`data.table`* and *`rlang`* (mostly through *`tidyverse`* functions), but they only use it parse expressions, due to it's convenient operator precedence. It's not actually called.
+
+Thus *`dotdot`* is completely *`tidyverse`* and *`data.table`* compatible, and some adhoc adjustments were made so it even works when the latter are attached after *`dotdot`*.
 
 ``` r
 library(data.table)
 #> 
 #> Attaching package: 'data.table'
-#> The following object is masked from 'package:dotdot':
+#> The following object is masked _by_ 'package:dotdot':
 #> 
 #>     :=
-try(levels(z) := c(.., "level5")) # fails!
-z
-#> [1] a b c
-#> Levels: a b c level4
-dotdot_first()
-#> 
-#> Attaching package: 'dotdot'
-#> The following object is masked from 'package:data.table':
-#> 
-#>     :=
-levels(z) := c(.., "level5") # works!
+levels(z) := c(.., "level5")
 z
 #> [1] a b c
 #> Levels: a b c level4 level5
@@ -57,3 +49,5 @@ data
 #> 5:          5.0         3.6          1.4         0.2  setosa       3
 #> 6:          5.4         3.9          1.7         0.4  setosa       3
 ```
+
+In case you've attached another package containing `:=`, you can use `dotdot_first()` to make sure that our `:=` is not masked.

@@ -18,8 +18,11 @@
 
 #' Make sure `:=` is unmasked
 #'
+#' This is not necessary to call this function after loading
+#' *rlang*/*tidyverse* or *data.table*
+#'
 #' @export
 dotdot_first <- function(){
   detach("package:dotdot")
-  library(dotdot)
+  library(dotdot,warn.conflicts = FALSE, quietly = TRUE )
 }
