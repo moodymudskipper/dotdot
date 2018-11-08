@@ -1,0 +1,4 @@
+exclude
+.Rproj.user
+.Rhistory
+.RData

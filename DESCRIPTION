@@ -1,0 +1,13 @@
+Package: dotdot
+Type: Package
+Title: Enhanced assignment
+Version: 0.1.0
+Author: Antoine Fabri
+Maintainer: Antoine Fabri <antoine.fabri@gmail.com>
+Description:
+  Use `..` on the right hand side as a shorthand for the left hand side.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.0
+VignetteBuilder: knitr
