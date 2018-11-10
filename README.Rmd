@@ -16,11 +16,14 @@ knitr::opts_chunk$set(
 
 # dotdot
 
+Installation :
+
+```{r}
+devtools::install_github("moodymudskipper/dotdot")
+```
+
 This package proposes an improved assignment using the shorthand  `..`.
 
-Think about the `..` as the `:` of the `:=` sign laid horizontally.
-
-Install it with `devtools::install_github("moodymudskipper/dotdot")`
 
 ```{r}
 library(dotdot)
@@ -34,11 +37,13 @@ levels(z) := c(.., "level4")
 z
 ```
 
-# Conflicts with other packages and integration with `tidyverse`
+You can think about the `..` as the `:` of the `:=` symbol laid horizontally.
+
+## Integration with *`data.table`*, *`tidyverse`* and other packages using `:=`
 
 The operator `:=` is used by prominent packages *`data.table`* and *`rlang`*
- (mostly through *`tidyverse`* functions), but they only use it parse expressions, 
- due to it's convenient operator precedence. It's not actually called. 
+ (mostly through *`tidyverse`* functions), but they only use it to parse expressions, 
+ due to its convenient operator precedence. It's not actually called. 
  
 Thus *`dotdot`* is completely *`tidyverse`* and *`data.table`* compatible, and
 some adhoc adjustments were made so it even works when the latter are attached
@@ -53,11 +58,8 @@ data[,new_col := 3] # `:= ` works as if dotdot wasn't attached
 data 
 ```
 
-In case you've attached another package containing `:=`, you can use `dotdot_first()` to
-make sure that our `:=` is not masked.
-
-An example of fine integration of the operator being used by `dotdot` and 
-`rlang` through `dplyr`
+An example of fine integration of the operator being used by *`dotdot`* and 
+*`rlang`* through *`dplyr`*
 
 ```{r}
 library(dplyr)
@@ -67,9 +69,13 @@ my_data_frame := .. %>% mutate(!!var := log(Petal.Width)) %>% head(2)
 my_data_frame
 ```
 
-# Comparison with magrittr's `%<>%` and integration in the tidyverse
+In case you've attached another package containing `:=`, you can use `dotdot_first()` to
+make sure that our `:=` is not masked (It seems to be rare enough though as I
+couldn't find an example)
 
-The package `magrittr` contains the operator `%<>%` which serves a similar role
+## Comparison with magrittr's `%<>%`
+
+The package *`magrittr`* contains the operator `%<>%` which serves a similar role
 to `:=`. Let's see how it is similar first, and then how it differs :
 
 These calls have the same effect:
@@ -80,7 +86,7 @@ iris$Sepal.Length %<>% log(.)
 iris$Sepal.Length := log(..)
 ```
 
-Those as well, but here we wee `magrittr` is less compact and readable.
+Those as well, but here we see *`magrittr`* is less compact and readable.
 
 ```{r,eval = FALSE}
 iris$Sepal.Length[5] %<>% multiply_by(2) %>% add(3)
@@ -90,9 +96,9 @@ iris$Sepal.Length[5] := 2*.. + 3
 
 Now for the differences, aside from compacity and readability :
 
-* attaching `magrittr` means often masking functions likes `extract` or 
-`set_names`. `dotdot` only exports its operator and the `dotdot_first` function.
-* `magrittr` operators deal with environment in a way that is much less straightforward, so this won't work :
+* attaching *`magrittr`* means often masking functions likes `extract` or 
+`set_names`. *`dotdot`* only exports its operator and the `dotdot_first` function.
+* *`magrittr`* operators deal with environment in a way that is much less straightforward, so this won't work :
 
 ```{r}
 library(magrittr)
@@ -127,7 +133,7 @@ test(foo)
 )
 ```
 
-# Edge cases and good practice
+## Edge cases and good practice
 
 `:=` is **NOT** meant to be a complete replacement of the `<-` operator, the latter is explicit in the absence of `..` , so more readable, is faster (though we're speaking microseconds), and won't clutter your `traceback()` when debugging. 
  

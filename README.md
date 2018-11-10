@@ -2,11 +2,22 @@
 dotdot
 ======
 
+Installation :
+
+``` r
+devtools::install_github("moodymudskipper/dotdot")
+#> Downloading GitHub repo moodymudskipper/dotdot@master
+#> from URL https://api.github.com/repos/moodymudskipper/dotdot/zipball/master
+#> Installing dotdot
+#> "C:/PROGRA~1/R/R-35~1.1/bin/x64/R" --no-site-file --no-environ --no-save  \
+#>   --no-restore --quiet CMD INSTALL  \
+#>   "C:/Users/Antoine/AppData/Local/Temp/RtmpwrkuN4/devtools32ec1cc169d/moodymudskipper-dotdot-0bbf116"  \
+#>   --library="C:/Users/Antoine/Documents/R/win-library/3.5"  \
+#>   --install-tests
+#> 
+```
+
 This package proposes an improved assignment using the shorthand `..`.
-
-Think about the `..` as the `:` of the `:=` sign laid horizontally.
-
-Install it with `devtools::install_github("moodymudskipper/dotdot")`
 
 ``` r
 library(dotdot)
@@ -23,10 +34,12 @@ z
 #> Levels: a b c level4
 ```
 
-Conflicts with other packages and integration with `tidyverse`
-==============================================================
+You can think about the `..` as the `:` of the `:=` symbol laid horizontally.
 
-The operator `:=` is used by prominent packages *`data.table`* and *`rlang`* (mostly through *`tidyverse`* functions), but they only use it parse expressions, due to it's convenient operator precedence. It's not actually called.
+Integration with *`data.table`*, *`tidyverse`* and other packages using `:=`
+----------------------------------------------------------------------------
+
+The operator `:=` is used by prominent packages *`data.table`* and *`rlang`* (mostly through *`tidyverse`* functions), but they only use it to parse expressions, due to its convenient operator precedence. It's not actually called.
 
 Thus *`dotdot`* is completely *`tidyverse`* and *`data.table`* compatible, and some adhoc adjustments were made so it even works when the latter are attached after *`dotdot`*.
 
@@ -49,9 +62,7 @@ data
 #> 2:          4.9         3.0          1.4         0.2  setosa       3
 ```
 
-In case you've attached another package containing `:=`, you can use `dotdot_first()` to make sure that our `:=` is not masked.
-
-An example of fine integration of the operator being used by `dotdot` and `rlang` through `dplyr`
+An example of fine integration of the operator being used by *`dotdot`* and *`rlang`* through *`dplyr`*
 
 ``` r
 library(dplyr)
@@ -75,10 +86,12 @@ my_data_frame
 #> 2          1.4         0.2  setosa       -1.609438
 ```
 
-Comparison with magrittr's `%<>%` and integration in the tidyverse
-==================================================================
+In case you've attached another package containing `:=`, you can use `dotdot_first()` to make sure that our `:=` is not masked (It seems to be rare enough though as I couldn't find an example)
 
-The package `magrittr` contains the operator `%<>%` which serves a similar role to `:=`. Let's see how it is similar first, and then how it differs :
+Comparison with magrittr's `%<>%`
+---------------------------------
+
+The package *`magrittr`* contains the operator `%<>%` which serves a similar role to `:=`. Let's see how it is similar first, and then how it differs :
 
 These calls have the same effect:
 
@@ -88,7 +101,7 @@ iris$Sepal.Length %<>% log(.)
 iris$Sepal.Length := log(..)
 ```
 
-Those as well, but here we wee `magrittr` is less compact and readable.
+Those as well, but here we see *`magrittr`* is less compact and readable.
 
 ``` r
 iris$Sepal.Length[5] %<>% multiply_by(2) %>% add(3)
@@ -98,8 +111,8 @@ iris$Sepal.Length[5] := 2*.. + 3
 
 Now for the differences, aside from compacity and readability :
 
--   attaching `magrittr` means often masking functions likes `extract` or `set_names`. `dotdot` only exports its operator and the `dotdot_first` function.
--   `magrittr` operators deal with environment in a way that is much less straightforward, so this won't work :
+-   attaching *`magrittr`* means often masking functions likes `extract` or `set_names`. *`dotdot`* only exports its operator and the `dotdot_first` function.
+-   *`magrittr`* operators deal with environment in a way that is much less straightforward, so this won't work :
 
 ``` r
 library(magrittr)
@@ -136,14 +149,14 @@ test(foo)
 )
 #> Unit: nanoseconds
 #>       expr   min    lq     mean median    uq     max neval
-#>       base   200   400   503.30    400   500   36600 10000
-#>     dotdot 10100 11900 14691.28  12900 13900 2212000 10000
-#>   magrittr 61900 64400 79372.60  66000 69300 6048500 10000
-#>  magrittr2 46300 48300 58868.22  49500 51900 3804100 10000
+#>       base   200   400   503.68    400   500   33100 10000
+#>     dotdot 10100 12000 16047.96  12900 13800 3781000 10000
+#>   magrittr 61800 64400 76422.06  65800 68500 3643400 10000
+#>  magrittr2 46300 48400 58700.53  49500 51500 5002100 10000
 ```
 
 Edge cases and good practice
-============================
+----------------------------
 
 `:=` is **NOT** meant to be a complete replacement of the `<-` operator, the latter is explicit in the absence of `..` , so more readable, is faster (though we're speaking microseconds), and won't clutter your `traceback()` when debugging.
 
