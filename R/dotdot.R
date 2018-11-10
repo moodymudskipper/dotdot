@@ -2,17 +2,56 @@
 #'
 #' Use \code{..} on the right hand side as a shorthand for the left hand side
 #'
+#' \code{:=} is **NOT** meant to be a complete replacement of the `<-` operator,
+#' the latter is explicit in the absence of \code{..} , so more readable, is faster
+#' (though we're speaking microseconds), and won't clutter your \code{traceback()}
+#' when debugging.
+#'
+#' \code{:=} can be used several times in a statement like
+#' \code{z <- (x := .. + 1) + (y:= .. +1)} but it never makes sense to use it
+#' \code{:=} several times in an assignment such as \code{x := (y := .. + 2)}
+#' as all the \code{..} will be replaced by the name of the variable on the lhs
+#' of the first evaluated \code{:=} in any case.  It can even produce counter
+#' intuitive output, see examples.
+#'
 #' @export
 #' @examples
 #' x <- factor(letters[1:3])
 #' levels(x) := c(.., "level4")
 #' x
+#'
+#' x <- 4
+#' y <- 7
+#' z <- (x := .. + 1) + (y:= .. +1)
+#' x
+#' y
+#' z
+#'
+#' #  using several  `:=` in an assignment is unuseful and potentially confusing
+#' x <- 4
+#' y <- 7
+#' x := (y := .. + 2) # same as `x <- (y := x + 2)`
+#' x
+#' y
+#'
+#' # Use it unambiguously
+#' x <- 4
+#' y <- 7
+#' x <- (y := .. + 2)
+#' x
+#' y
+#'
+#' x <- 4
+#' y <- 7
+#' x := (y <- .. + 2)
+#' x
+#' y
 `:=` <- function(e1,e2) {
   mc <- match.call()
   mc[[1]] <- quote(.Primitive("<-"))
   mc[[3]] <- eval(substitute(
     substitute(e2, list(.. = mc[[2]])),list(e2 = mc[[3]])
-    ))
+  ))
   eval.parent(mc)
 }
 

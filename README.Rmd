@@ -34,6 +34,8 @@ levels(z) := c(.., "level4")
 z
 ```
 
+# Conflicts with other packages and integration with `tidyverse`
+
 The operator `:=` is used by prominent packages *`data.table`* and *`rlang`*
  (mostly through *`tidyverse`* functions), but they only use it parse expressions, 
  due to it's convenient operator precedence. It's not actually called. 
@@ -46,10 +48,128 @@ after *`dotdot`*.
 library(data.table)
 levels(z) := c(.., "level5")
 z
-data <- as.data.table(head(iris))
+data <- as.data.table(head(iris,2))
 data[,new_col := 3] # `:= ` works as if dotdot wasn't attached
 data 
 ```
 
 In case you've attached another package containing `:=`, you can use `dotdot_first()` to
 make sure that our `:=` is not masked.
+
+An example of fine integration of the operator being used by `dotdot` and 
+`rlang` through `dplyr`
+
+```{r}
+library(dplyr)
+my_data_frame <- iris[3:5]
+var = quo(Log.Petal.Width)
+my_data_frame := .. %>% mutate(!!var := log(Petal.Width)) %>% head(2)
+my_data_frame
+```
+
+# Comparison with magrittr's `%<>%` and integration in the tidyverse
+
+The package `magrittr` contains the operator `%<>%` which serves a similar role
+to `:=`. Let's see how it is similar first, and then how it differs :
+
+These calls have the same effect:
+
+```{r,eval = FALSE}
+iris$Sepal.Length %<>% log
+iris$Sepal.Length %<>% log(.)
+iris$Sepal.Length := log(..)
+```
+
+Those as well, but here we wee `magrittr` is less compact and readable.
+
+```{r,eval = FALSE}
+iris$Sepal.Length[5] %<>% multiply_by(2) %>% add(3)
+iris$Sepal.Length[5] %<>% {2*. + 3}
+iris$Sepal.Length[5] := 2*.. + 3
+```
+
+Now for the differences, aside from compacity and readability :
+
+* attaching `magrittr` means often masking functions likes `extract` or 
+`set_names`. `dotdot` only exports its operator and the `dotdot_first` function.
+* `magrittr` operators deal with environment in a way that is much less straightforward, so this won't work :
+
+```{r}
+library(magrittr)
+test <- function(some_parameter) {
+  some_parameter %<>% {as.character(substitute(.))}
+  some_parameter
+  }
+x <- try(test(foo))
+inherits(x,"try-error")
+```
+
+While this will work fine:
+
+```{r}
+test <- function(some_parameter) {
+  some_parameter := as.character(substitute(..))
+  some_parameter
+  }
+test(foo)
+```
+
+*  `:=` is also faster than `%<>%` , though these operations are fast anyway and not likely to be a bottleneck very often if ever:
+
+```{r}
+ b <- x <- y <- z <- 1
+ microbenchmark::microbenchmark(
+   base      = {b <- b + 1},
+   dotdot    = {x := .. + 1},
+   magrittr  = {y %<>% add(1)},
+   magrittr2 = {z %<>% {. + 1}},
+   times = 1e4
+)
+```
+
+# Edge cases and good practice
+
+`:=` is **NOT** meant to be a complete replacement of the `<-` operator, the latter is explicit in the absence of `..` , so more readable, is faster (though we're speaking microseconds), and won't clutter your `traceback()` when debugging. 
+ 
+`:=` can be used several times in a statement like `z <- (x := .. + 1) + (y:= .. +1)` but it never makes sense to use it `:=` several times in an assignment such as `x := (y := .. + 2)` as all the `..` will be replaced by the name of the variable on the lhs of the first evaluated `:=` in any case.  It can even produce counter intuitive output, see below.
+
+
+This is all good and explicit :
+
+```
+x <- 4
+y <- 7
+z <- (x := .. + 1) + (y:= .. +1)
+x
+y
+z
+```
+
+But using several nested `:=` is unuseful and potentially confusing, here the
+dots will be replaced by `x`, though one might have expected them to be replaced
+by `y`.
+
+```
+x <- 4
+y <- 7
+x := (y := .. + 2) # same as `x <- (y := x + 2)` 
+x
+y
+```
+
+Good practice makes things unambiguous :
+
+```
+x <- 4
+y <- 7
+x <- (y := .. + 2)
+x
+y
+
+x <- 4
+y <- 7
+x := (y <- .. + 2)
+x
+y
+```
+
