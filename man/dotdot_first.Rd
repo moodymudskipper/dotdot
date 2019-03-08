@@ -7,6 +7,6 @@
 dotdot_first()
 }
 \description{
-This is not necessary to call this function after loading
+This is not necessary to call this function after attaching
 *rlang*/*tidyverse* or *data.table*
 }

@@ -1,26 +1,22 @@
 ---
-output:
-  md_document:
-    variant: markdown_github
+title: "dotdot"
+author: "Antoine Fabri"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
-```{r, echo = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>",
-  fig.path = "README-"
+  comment = "#>"
 )
 ```
 
-# dotdot
-
-Installation :
-
-```{r, eval = FALSE}
-devtools::install_github("moodymudskipper/dotdot")
-```
+## Introduction
 
 This package proposes an enhanced assignment using the shorthand  `..`.
 

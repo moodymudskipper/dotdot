@@ -6,15 +6,6 @@ Installation :
 
 ``` r
 devtools::install_github("moodymudskipper/dotdot")
-#> Downloading GitHub repo moodymudskipper/dotdot@master
-#> from URL https://api.github.com/repos/moodymudskipper/dotdot/zipball/master
-#> Installing dotdot
-#> "C:/PROGRA~1/R/R-35~1.1/bin/x64/R" --no-site-file --no-environ --no-save  \
-#>   --no-restore --quiet CMD INSTALL  \
-#>   "C:/Users/Antoine/AppData/Local/Temp/RtmpwrkuN4/devtools32ec1cc169d/moodymudskipper-dotdot-0bbf116"  \
-#>   --library="C:/Users/Antoine/Documents/R/win-library/3.5"  \
-#>   --install-tests
-#> 
 ```
 
 This package proposes an improved assignment using the shorthand `..`.
@@ -121,6 +112,7 @@ test <- function(some_parameter) {
   some_parameter
   }
 x <- try(test(foo))
+#> Error in eval(lhs, parent, parent) : objet 'foo' introuvable
 inherits(x,"try-error")
 #> [1] TRUE
 ```
@@ -148,11 +140,11 @@ test(foo)
    times = 1e4
 )
 #> Unit: nanoseconds
-#>       expr   min    lq     mean median    uq     max neval
-#>       base   200   400   503.68    400   500   33100 10000
-#>     dotdot 10100 12000 16047.96  12900 13800 3781000 10000
-#>   magrittr 61800 64400 76422.06  65800 68500 3643400 10000
-#>  magrittr2 46300 48400 58700.53  49500 51500 5002100 10000
+#>       expr   min    lq       mean median    uq     max neval  cld
+#>       base   200   302   493.4608    401   501   36501 10000 a   
+#>     dotdot 10001 11802 14891.2715  12901 14001 2888200 10000  b  
+#>   magrittr 61001 63502 79046.3541  65301 69700 4641102 10000    d
+#>  magrittr2 45601 47801 58116.3759  49100 51701 3128902 10000   c
 ```
 
 Edge cases and good practice
