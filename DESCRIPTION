@@ -5,9 +5,9 @@ Version: 0.1.0
 Author: Antoine Fabri
 Maintainer: Antoine Fabri <antoine.fabri@gmail.com>
 Description:
-    Use `..` on the right hand side of the `:=` operator as a shorthand for the 
-    left hand side, so that `var := f(..) + ..` is equivalent to
-    `var <- f(var) + var`. This permits the user to be explicit about growing an
+    Use '..' on the right hand side of the ':=' operator as a shorthand for the 
+    left hand side, so that 'var := f(..) + ..' is equivalent to
+    'var <- f(var) + var'. This permits the user to be explicit about growing an
     object or overwriting it using its previous value, avoids repeating a 
     variable name, and saves keystrokes, time, visual space and cognitive load.
 License: GPL-3
@@ -17,4 +17,5 @@ RoxygenNote: 6.1.1
 VignetteBuilder: knitr
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    htmltools

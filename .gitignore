@@ -3,3 +3,4 @@ exclude
 .Rproj.user
 .Rhistory
 .RData
+.httr-oauth
