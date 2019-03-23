@@ -4,11 +4,11 @@
 \name{dotdot-package}
 \alias{dotdot}
 \alias{dotdot-package}
-\title{dotdot: Enhanced Assignment to Overwrite or Grow Objects}
+\title{dotdot: Enhanced Assignment Operator to Overwrite or Grow Objects}
 \description{
-Use `..` on the right hand side of the `:=` operator as a shorthand for the 
-    left hand side, so that `var := f(..) + ..` is equivalent to
-    `var <- f(var) + var`. This permits the user to be explicit about growing an
+Use '..' on the right hand side of the ':=' operator as a shorthand for the 
+    left hand side, so that 'var := f(..) + ..' is equivalent to
+    'var <- f(var) + var'. This permits the user to be explicit about growing an
     object or overwriting it using its previous value, avoids repeating a 
     variable name, and saves keystrokes, time, visual space and cognitive load.
 }
